@@ -1,0 +1,21 @@
+<resources>
+    <color name="background_gradient_start">#000000</color>
+    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="fastlane_background">#0096a6</color>
+    <color name="search_opaque">#ffaa3f</color>
+    <color name="selected_background">#ffaa3f</color>
+    <color name="default_background">#3d3d3d</color>
+
+    <color name="dark">#2C2B2B</color>
+    <color name="menu"> #0F0F0F</color>
+    <color name="navigationBarColor">#123456</color>
+
+
+
+    //Media Player Controls
+    <color name="media_player_controls">#ffffff</color>
+    <color name="media_player_controls_background">#60000000</color>
+
+    <color name="black_overlay">#66000000</color>
+
+</resources>
