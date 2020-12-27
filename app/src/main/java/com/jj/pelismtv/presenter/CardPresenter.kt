@@ -10,6 +10,7 @@ import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import com.jj.pelismtv.R
 import com.jj.pelismtv.model.Movie
+import com.jj.pelismtv.utils.Common
 
 
 class CardPresenter: Presenter() {
@@ -52,7 +53,7 @@ class CardPresenter: Presenter() {
 
         val cardView = viewHolder!!.view as ImageCardView
         cardView.titleText = video.title
-        cardView.contentText = video.overview
+        cardView.contentText = Common.formatData(video.overview?:"")
 
         // Set card size from dimension resources.
         val res = cardView.resources
@@ -60,7 +61,7 @@ class CardPresenter: Presenter() {
         val height = res.getDimensionPixelSize(R.dimen.card_height)
         cardView.setMainImageDimensions(width, height)
         Glide.with(cardView.context)
-            .load<Any>(video.poster_path)
+            .load(video.poster_path)
             .error(mDefaultCardImage)
             .into(cardView.mainImageView)
     }

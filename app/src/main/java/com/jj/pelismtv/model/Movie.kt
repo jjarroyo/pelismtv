@@ -15,6 +15,7 @@ data class Movie(
     @TypeConverters(DateConverter::class)
     var release_date: Date,
     val poster_path: String,
+    val backdrop_path: String? = null,
     val trailer: String? = null,
     val updated_at: String
 )

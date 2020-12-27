@@ -2,23 +2,27 @@ package com.jj.pelismtv.domain
 
 import androidx.lifecycle.LiveData
 import com.jj.pelismtv.logic.MovieResource
-import com.jj.pelismtv.model.Genre
-import com.jj.pelismtv.model.Movie
-import com.jj.pelismtv.model.MovieWithGenres
-import com.jj.pelismtv.model.Player
+import com.jj.pelismtv.model.*
 import com.jj.pelismtv.vo.Resource
+import io.reactivex.Flowable
 
 class MovieUseCase() {
 
     private val movieSource = MovieResource()
 
-    fun getList(): LiveData<List<Movie>> {
-        return movieSource.getListMovies()
+    fun getList(col: Int): LiveData<List<Movie>> {
+        return movieSource.getListMovies(col)
+    }
+    fun getListForGenre(col: Int,genre: Int): LiveData<List<Movie>> {
+        return movieSource.getListMoviesForGenre(col,genre)
     }
 
+    fun getSearchMovie(search :String): LiveData<List<Movie>> {
+        return movieSource.getMovie(search)
+    }
 
-    suspend fun getMovie(id:Int): Resource<MovieWithGenres> {
-        return movieSource.getMovie(id)
+    fun getMovie(id: Int): LiveData<Movie> {
+        return movieSource.getMovieSelected(id)
     }
 
     suspend fun getVideoInfo(movie:Int): Resource<Array<Player>> {
@@ -29,8 +33,8 @@ class MovieUseCase() {
         return movieSource.getVideoDownload(movie)
     }
 
-    suspend fun getGenres(): Resource<Array<Genre>> {
-        return movieSource.getGenres()
+    fun getGenresWithMovies(): Flowable<List<GenreWithMovies>> {
+        return movieSource.getListMovieGenres()
     }
 
     suspend fun sendData(body: String):Boolean{

@@ -3,6 +3,8 @@ package com.jj.pelismtv.ui.search
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
+import androidx.leanback.widget.SearchBar
+import androidx.leanback.widget.SpeechOrbView
 import com.jj.pelismtv.R
 
 
@@ -15,6 +17,8 @@ class SearchActivity : LeanbackActivity() {
 
         mFragment = supportFragmentManager
                 .findFragmentById(R.id.search_fragment) as SearchFragment?
+
+
     }
 
     override fun onSearchRequested(): Boolean {

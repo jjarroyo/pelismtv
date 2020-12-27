@@ -1,30 +1,32 @@
 package com.jj.pelismtv.ui.search
 
-import android.Manifest
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
+import androidx.lifecycle.ViewModelProvider
 import com.jj.pelismtv.BuildConfig
 import com.jj.pelismtv.R
+import com.jj.pelismtv.domain.MovieUseCase
 import com.jj.pelismtv.model.Movie
 import com.jj.pelismtv.presenter.CardPresenter
-import com.jj.pelismtv.utils.VideoContract
+import com.jj.pelismtv.ui.MainViewModel
+import com.jj.pelismtv.ui.MainViewModelFactory
+import com.jj.pelismtv.ui.detail.MovieDetailsActivity
+import java.lang.reflect.Field
 
-class SearchFragment: SearchSupportFragment(), SearchSupportFragment.SearchResultProvider,
-LoaderManager.LoaderCallbacks<Cursor> {
+
+class SearchFragment: SearchSupportFragment(), SearchSupportFragment.SearchResultProvider{
 
     companion object {
         private const val TAG = "SearchFragment"
@@ -32,7 +34,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
         private const val FINISH_ON_RECOGNIZER_CANCELED = true
         private const val REQUEST_SPEECH = 0x00000010
     }
-
+    private lateinit var viewModel: MainViewModel
     private val mHandler = Handler()
     private var mRowsAdapter: ArrayObjectAdapter? = null
     private var mQuery: String? = null
@@ -42,45 +44,19 @@ LoaderManager.LoaderCallbacks<Cursor> {
     private var mResultsFound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+      super.onCreate(savedInstanceState)
+
         mRowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-     //   mVideoCursorAdapter.mapper = VideoCursorMapper()
+    //    mVideoCursorAdapter.mapper = VideoCursorMapper()
         setSearchResultProvider(this)
-        setOnItemViewClickedListener(ItemViewClickedListener())
-        if (DEBUG) {
-            Log.d(
-                TAG,
-                "User is initiating a search. Do we have RECORD_AUDIO permission? " +
-                        hasPermission(Manifest.permission.RECORD_AUDIO)
-            )
-        }
-        if (!hasPermission(Manifest.permission.RECORD_AUDIO)) {
-            if (DEBUG) {
-                Log.d(
-                    TAG,
-                    "Does not have RECORD_AUDIO, using SpeechRecognitionCallback"
-                )
-            }
-            // SpeechRecognitionCallback is not required and if not provided recognition will be
-            // handled using internal speech recognizer, in which case you must have RECORD_AUDIO
-            // permission
-            setSpeechRecognitionCallback {
-                try {
-                    startActivityForResult(
-                        recognizerIntent,
-                        REQUEST_SPEECH
-                    )
-                } catch (e: ActivityNotFoundException) {
-                    Log.e(
-                        TAG,
-                        "Cannot find activity for speech recognizer",
-                        e
-                    )
-                }
-            }
-        } else if (DEBUG) {
-            Log.d(TAG, "We DO have RECORD_AUDIO")
-        }
+        setOnItemViewClickedListener(ItemViewClickedListener(requireActivity()))
+        viewModel = ViewModelProvider(this@SearchFragment, MainViewModelFactory(MovieUseCase())).get(MainViewModel::class.java)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = super.onCreateView(inflater, container, savedInstanceState)
+        //activity?.finishActivity(REQ_CODE_SPEECH_INPUT)
+        return root
     }
 
     override fun onPause() {
@@ -96,11 +72,11 @@ LoaderManager.LoaderCallbacks<Cursor> {
                     if (FINISH_ON_RECOGNIZER_CANCELED) {
                         if (!hasResults()) {
                             if (DEBUG) Log.v(
-                                TAG,
-                                "Voice search canceled"
+                                    TAG,
+                                    "Voice search canceled"
                             )
                             requireView().findViewById<View>(R.id.lb_search_bar_speech_orb)
-                                .requestFocus()
+                                    .requestFocus()
                         }
                     }
             }
@@ -112,19 +88,19 @@ LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onQueryTextChange(newQuery: String?): Boolean {
         if (DEBUG) Log.i(
-            TAG,
-            String.format("Search text changed: %s", newQuery)
+                TAG,
+                String.format("Search text changed: %s", newQuery)
         )
         if (newQuery != null) {
-            loadQuery(newQuery)
+           // loadQuery(newQuery)
         }
         return true
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (DEBUG) Log.i(
-            TAG,
-            String.format("Search text submitted: %s", query)
+                TAG,
+                String.format("Search text submitted: %s", query)
         )
         if (query != null) {
             loadQuery(query)
@@ -137,17 +113,18 @@ LoaderManager.LoaderCallbacks<Cursor> {
         return mRowsAdapter!!.size() > 0 && mResultsFound
     }
 
-    private fun hasPermission(permission: String): Boolean {
-        val context: Context? = activity
-        return PackageManager.PERMISSION_GRANTED == context!!.packageManager.checkPermission(
-            permission, context.packageName
-        )
-    }
+
 
     private fun loadQuery(query: String) {
         if (!TextUtils.isEmpty(query) && query != "nil") {
             mQuery = query
-            loaderManager.initLoader(mSearchLoaderId++, null, this)
+
+            viewModel.getSearchMovies(mQuery)?.observe(viewLifecycleOwner, {
+                if (it != null) {
+                    onLoadResult(it)
+                }
+
+            })
         }
     }
 
@@ -156,57 +133,44 @@ LoaderManager.LoaderCallbacks<Cursor> {
     }
 
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val query = mQuery!!
-        return CursorLoader(
-            requireActivity(),
-            VideoContract.VideoEntry.CONTENT_URI,
-            null,  // Return all fields.
-            VideoContract.VideoEntry.COLUMN_NAME + " LIKE ? OR " +
-                    VideoContract.VideoEntry.COLUMN_DESC + " LIKE ?",
-            arrayOf("%$query%", "%$query%"),
-            null // Default sort order
-        )
-    }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
+     fun onLoadResult(data: List<Movie>) {
+
+         val listRowAdapter = ArrayObjectAdapter(CardPresenter())
         val titleRes: Int
-        if (data != null && data.moveToFirst()) {
+        if (data.count() > 0) {
             mResultsFound = true
             titleRes = R.string.search_results
+
+            for (item in data){
+                listRowAdapter.add(item)
+            }
+
         } else {
             mResultsFound = false
             titleRes = R.string.no_search_results
         }
-        mVideoCursorAdapter.changeCursor(data)
+
         val header = HeaderItem(getString(titleRes, mQuery))
         mRowsAdapter!!.clear()
-        val row = ListRow(header, mVideoCursorAdapter)
+        val row = ListRow(header, listRowAdapter)
         mRowsAdapter!!.add(row)
     }
-
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        mVideoCursorAdapter.changeCursor(null)
-    }
-
-    private class ItemViewClickedListener : OnItemViewClickedListener {
-        override fun onItemClicked(
-            itemViewHolder: Presenter.ViewHolder, item: Any,
-            rowViewHolder: RowPresenter.ViewHolder, row: Row
-        ) {
+    private class ItemViewClickedListener(context: Activity) : OnItemViewClickedListener {
+        val context = context
+        override fun onItemClicked(itemViewHolder: Presenter.ViewHolder, item: Any?,
+                                   rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
             if (item is Movie) {
-         /*       val video: Movie = item as Movie
-                val intent = Intent(getActivity(), VideoDetailsActivity::class.java)
-                intent.putExtra(VideoDetailsActivity.VIDEO, video)
+
+                val intent = Intent(context, MovieDetailsActivity::class.java)
+                intent.putExtra("movie_id", item.id)
+
                 val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    getActivity(),
-                    (itemViewHolder.view as ImageCardView).mainImageView,
-                    VideoDetailsActivity.SHARED_ELEMENT_NAME
-                ).toBundle()
-                getActivity().startActivity(intent, bundle)
-            } else {
-                Toast.makeText(getActivity(), item as String, Toast.LENGTH_SHORT).show()*/
+                    context,
+                    (itemViewHolder.view as ImageCardView).mainImageView, "hero").toBundle()
+                context.startActivity(intent, bundle)
             }
         }
     }
+
 }

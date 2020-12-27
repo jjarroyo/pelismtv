@@ -1,5 +1,6 @@
 package com.jj.pelismtv.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.jj.pelismtv.model.Player
 
@@ -19,7 +20,7 @@ interface PlayerDao {
     suspend  fun deletePlayer(player: Player)
 
     @Query("SELECT * FROM players where movie_id = :movie order by id desc")
-    suspend  fun getPlayer(movie:Int):Array<Player>
+    suspend fun getPlayer(movie:Int):Array<Player>
 
     @Query("SELECT * FROM players where movie_id = :movie and link LIKE '%drive%' and type = 'Download' LIMIT 1")
     suspend  fun getPlayerDownload(movie:Int):Player

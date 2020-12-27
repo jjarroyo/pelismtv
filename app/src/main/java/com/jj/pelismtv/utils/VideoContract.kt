@@ -37,7 +37,7 @@ import android.provider.BaseColumns
          val COLUMN_CATEGORY = "category"
 
          // Name of the video.
-         val COLUMN_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1
+         val COLUMN_NAME = "title"
 
          // Description of the video.
          val COLUMN_DESC = SearchManager.SUGGEST_COLUMN_TEXT_2

@@ -23,14 +23,17 @@
         android:required="true" />
 
     <application
-        android:name="com.jj.pelismtv.AppDelegate"
+        android:name=".AppDelegate"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Leanback"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.splash.SplashActivity"
+        <activity android:name=".ui.grid.GridGenreActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,29 +41,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.onboarding.OnboardingActivity"
-            android:theme="@style/Theme.Leanback.Onboarding"
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
             android:screenOrientation="landscape"
-            />
+            android:theme="@style/Theme.Leanback.Onboarding" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.detail.MovieDetailsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.detail.player.PlayerActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.MainActivity"
             android:banner="@drawable/app_icon_your_company"
             android:icon="@drawable/app_icon_your_company"
             android:label="@string/app_name"
             android:logo="@drawable/app_icon_your_company"
-            android:theme="@style/Theme.Leanback.VerticalGrid"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Leanback.VerticalGrid">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailsActivity" />
-        <activity android:name=".PlaybackActivity" />
-
-
-
     </application>
 
 </manifest>

@@ -1,18 +1,17 @@
 package com.jj.pelismtv.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import androidx.fragment.app.FragmentActivity
 import com.jj.pelismtv.R
 import com.jj.pelismtv.ui.onboarding.OnboardingActivity
 import com.jj.pelismtv.ui.onboarding.OnboardingFragment
+import com.jj.pelismtv.ui.search.LeanbackActivity
 
 /**
  * Loads [MainFragment].
  */
-class MainActivity : FragmentActivity() {
+class MainActivity : LeanbackActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

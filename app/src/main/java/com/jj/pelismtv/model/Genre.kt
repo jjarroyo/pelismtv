@@ -2,6 +2,7 @@ package com.jj.pelismtv.model
 
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 @Entity(tableName = "genres", primaryKeys = ["id"])
 data class Genre(
@@ -45,4 +46,18 @@ data class MovieWithGenres(
         )
     )
     val genres: List<Genre>
+)
+
+data class GenreWithMovies(
+        @Embedded val genre: Genre,
+        @Relation(
+                parentColumn = "id",
+                entity = Movie::class,
+                entityColumn = "id",
+                associateBy = Junction(
+                        value = MovieGenre::class,parentColumn = "genre_id",entityColumn = "movie_id"
+                )
+        )
+        val movies: List<Movie>
+
 )

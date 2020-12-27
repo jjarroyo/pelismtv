@@ -7,7 +7,7 @@ import com.jj.pelismtv.model.*
 
 
 @Database(
-    entities = [Movie::class, Genre::class, Player::class, MovieGenre::class,Setting::class,Serie::class,Season::class,Episode::class,GenreSerie::class,SerieGenre::class,PlayerSerie::class],version = 6
+    entities = [Movie::class, Genre::class, Player::class, MovieGenre::class,Setting::class,Serie::class,Season::class,Episode::class,GenreSerie::class,SerieGenre::class,PlayerSerie::class],version = 7
 )
 @TypeConverters(DateConverter::class)
 abstract class DataBase : RoomDatabase(){

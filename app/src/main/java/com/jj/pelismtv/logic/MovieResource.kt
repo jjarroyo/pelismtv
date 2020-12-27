@@ -7,6 +7,7 @@ import com.jj.pelismtv.AppDelegate
 import com.jj.pelismtv.model.*
 import com.jj.pelismtv.utils.RetrofitClient
 import com.jj.pelismtv.vo.Resource
+import io.reactivex.Flowable
 import org.json.JSONObject
 
 class MovieResource {
@@ -16,9 +17,18 @@ class MovieResource {
     private val playerdao = AppDelegate.database!!.playerDao()
     private val genredao = AppDelegate.database!!.genreDao()
 
-    fun getListMovies(): LiveData<List<Movie>> {
+    fun getListMovies(col: Int): LiveData<List<Movie>> {
 
-        return moviedao.getMoviesRecent()
+        return moviedao.getMoviesRecent(col)
+    }
+    fun getListMoviesForGenre(col: Int,genre: Int): LiveData<List<Movie>> {
+
+        return moviedao.getMoviesForGenre(col,genre)
+    }
+
+    fun getListMovieGenres(): Flowable<List<GenreWithMovies>> {
+
+        return moviedao.getMovieGenres()
     }
 
 
@@ -86,11 +96,16 @@ class MovieResource {
         }
     }
 
-    suspend fun getMovie(id:Int): Resource<MovieWithGenres> {
-        Log.e("llega","sdaaaaasdsd")
-         var movie = moviedao.getMovie(id)
-        return Resource.Success(movie)
+    fun getMovie(search :String): LiveData<List<Movie>> {
+        return moviedao.getMovie(search)
+
     }
+
+    fun getMovieSelected(id :Int): LiveData<Movie> {
+        return moviedao.getMovieSelect(id)
+
+    }
+
     suspend fun getGenres(): Resource<Array<Genre>> {
         return Resource.Success(genredao.getGenres())
     }
