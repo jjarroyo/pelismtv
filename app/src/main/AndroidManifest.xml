@@ -30,8 +30,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Leanback"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.grid.GridGenreActivity"
-            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.detail.serie.EpisodeActivity"
+            android:screenOrientation="landscape"
+            >
+
+        </activity>
+        <activity android:name=".ui.detail.serie.GridSeasonActivity"
+            android:screenOrientation="landscape"
+            />
+        <activity
+            android:name=".ui.SerieActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Pelismtv.CustomTitle" />
+        <activity
+            android:name=".ui.grid.GridGenreActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -49,7 +62,7 @@
             android:name=".ui.search.SearchActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ui.detail.MovieDetailsActivity"
+            android:name=".ui.detail.serie.MovieDetailsActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.detail.player.PlayerActivity"
@@ -61,7 +74,7 @@
             android:label="@string/app_name"
             android:logo="@drawable/app_icon_your_company"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Leanback.VerticalGrid">
+            android:theme="@style/Theme.Pelismtv.CustomTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

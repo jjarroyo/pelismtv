@@ -4,6 +4,7 @@ import androidx.room.*
 import com.jj.pelismtv.model.Episode
 import com.jj.pelismtv.model.EpisodeSeason
 import com.jj.pelismtv.model.Season
+import io.reactivex.Flowable
 
 @Dao
 interface EpisodeDao {
@@ -20,7 +21,7 @@ interface EpisodeDao {
     suspend fun deleteEpisode(episode: Episode)
 
     @Query("SELECT * FROM episodes WHERE season_id = :id")
-    suspend fun getEpisodes(id:Int):  Array<Episode>
+    fun getEpisodes(id:Int): Flowable<List<Episode>>
 
     @Query("SELECT * FROM episodes WHERE id = :id LIMIT 1")
     suspend fun getDataInfo(id:Int): Array<EpisodeSeason>

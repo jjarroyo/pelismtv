@@ -1,7 +1,6 @@
 package com.jj.pelismtv.ui.search
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
@@ -22,8 +20,7 @@ import com.jj.pelismtv.model.Movie
 import com.jj.pelismtv.presenter.CardPresenter
 import com.jj.pelismtv.ui.MainViewModel
 import com.jj.pelismtv.ui.MainViewModelFactory
-import com.jj.pelismtv.ui.detail.MovieDetailsActivity
-import java.lang.reflect.Field
+import com.jj.pelismtv.ui.detail.serie.MovieDetailsActivity
 
 
 class SearchFragment: SearchSupportFragment(), SearchSupportFragment.SearchResultProvider{

@@ -1,18 +1,13 @@
-package com.jj.pelismtv.ui.detail
+package com.jj.pelismtv.ui.detail.serie
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.jj.pelismtv.R
 import com.jj.pelismtv.ui.search.LeanbackActivity
 
-open class MovieDetailsActivity : LeanbackActivity() {
-
-
+class EpisodeActivity : LeanbackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_movie_details)
+        setContentView(R.layout.activity_episode)
     }
-
-
-
 }

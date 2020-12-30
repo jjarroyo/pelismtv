@@ -84,8 +84,6 @@ class VideoPlayerGlue(
         adapter.add(mFastForwardAction)
     }
 
-
-
     /** Skips backwards 10 seconds.  */
     fun rewind() {
         Log.e("position current2",""+currentPosition)

@@ -67,7 +67,7 @@ class MovieDetailsFragment: DetailsSupportFragment() {
             viewModel.getMovie(movieId)?.observe(viewLifecycleOwner, {
                 if (it != null) {
                     mSelectedMovie = it
-                    it.backdrop_path?.let { it1 -> updateBackground(it1) }
+                    it.backdrop_path?.let { it1 -> updateBackground(it1.replace("w500","original")) }
                     setupDetailsOverviewRowPresenter()
                     setupDetailsOverviewRow()
                     adapter = mAdapter

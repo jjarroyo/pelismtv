@@ -25,6 +25,8 @@
     <dimen name="detail_thumb_height">274dp</dimen>
     <dimen name="playback_overlay_width">260dp</dimen>
     <dimen name="playback_overlay_height">260dp</dimen>
+    <dimen name="lb_browse_title_height">60dp</dimen>
+    <dimen name="lb_browse_title_text_width">584dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">6dp</dimen>

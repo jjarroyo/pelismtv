@@ -31,4 +31,5 @@
     <string name="header_icon">Icono de encabezado</string>
     <string name="vertical_grid_title">Peliculas</string>
     <string name="playback_tag">PLAYBACK_TAG</string>
+    <string name="serie_grid_title">Series</string>
 </resources>

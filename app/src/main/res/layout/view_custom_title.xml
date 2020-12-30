@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Button
+        android:id="@+id/serie_btn"
+        style="?attr/browseTitleIconStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/lb_browse_title_icon_height"
+        android:layout_gravity="center_vertical|end"
+        android:adjustViewBounds="true"
+        android:focusable="true"
+        android:maxWidth="@dimen/lb_browse_title_icon_max_width"
+        android:text="Ver Series"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/title_tv"
+        style="?attr/browseTitleTextStyle"
+        android:layout_width="@dimen/lb_browse_title_text_width"
+        android:layout_height="@dimen/lb_browse_title_height"
+        android:layout_gravity="center_vertical|end"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:textAlignment="center"
+        tools:ignore="RtlCompat" />
+
+    <androidx.leanback.widget.SearchOrbView
+        android:id="@+id/search_orb_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginTop="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:nextFocusForward="@id/serie_btn"
+        android:padding="16dp"
+        android:paddingStart="48dp"
+        android:transitionGroup="true"
+        android:visibility="visible" />
+</merge>

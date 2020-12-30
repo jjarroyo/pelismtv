@@ -20,5 +20,10 @@
     <color name="media_player_controls_background">#60000000</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="card_examples_background">#222222</color>
+    <color name="search_color">#FFEB3B</color>
+    <color name="search_icon_color">#222222</color>
+    <color name="search_bright_color">#FFEB3B</color>
+    <color name="accent">#80D3FB</color>
 
 </resources>

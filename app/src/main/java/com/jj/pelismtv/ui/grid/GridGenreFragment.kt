@@ -8,13 +8,12 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
-import com.jj.pelismtv.R
 import com.jj.pelismtv.domain.MovieUseCase
 import com.jj.pelismtv.model.Movie
 import com.jj.pelismtv.presenter.CardPresenter
 import com.jj.pelismtv.ui.MainViewModel
 import com.jj.pelismtv.ui.MainViewModelFactory
-import com.jj.pelismtv.ui.detail.MovieDetailsActivity
+import com.jj.pelismtv.ui.detail.serie.MovieDetailsActivity
 import com.jj.pelismtv.ui.search.SearchActivity
 import java.util.*
 

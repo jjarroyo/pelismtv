@@ -1,10 +1,8 @@
 package com.jj.pelismtv.data
 
 import androidx.room.*
-import com.jj.pelismtv.model.Movie
-import com.jj.pelismtv.model.MovieWithGenres
-import com.jj.pelismtv.model.Serie
-import com.jj.pelismtv.model.SerieWithGenres
+import com.jj.pelismtv.model.*
+import io.reactivex.Flowable
 
 
 @Dao
@@ -47,5 +45,9 @@ interface SerieDao {
     suspend fun getSeriesRecentYear(search:String?,startYear:Long?,endYear:Long?): Array<Serie>
     @Query("SELECT * FROM series where title LIKE '%' || :search || '%' and first_air_date BETWEEN  :startYear  AND :endYear order by first_air_date asc ")
     suspend fun getSeriesOldYear(search:String?,startYear:Long?,endYear:Long?): Array<Serie>
+
+
+    @Query("SELECT * FROM genres_serie")
+    fun getListGenreSeries(): Flowable<List<GenreWithSeries>>
 
 }

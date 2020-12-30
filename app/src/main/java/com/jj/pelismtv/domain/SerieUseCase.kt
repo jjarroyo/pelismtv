@@ -3,13 +3,10 @@ package com.jj.pelismtv.domain
 import com.jj.pelismtv.logic.SerieResource
 import com.jj.pelismtv.model.*
 import com.jj.pelismtv.vo.Resource
+import io.reactivex.Flowable
 
 class SerieUseCase() {
     private val serieSource = SerieResource()
-
-    suspend fun getList(sort:Int,search:String?,startYear:Long?,endYear:Long?,genres:Array<String>? = null): Resource<Array<Serie>> {
-        return serieSource.getListSeries(sort,search,startYear,endYear,genres)
-    }
 
     suspend fun getGenres(): Resource<Array<GenreSerie>> {
         return serieSource.getGenres()
@@ -18,10 +15,10 @@ class SerieUseCase() {
     suspend fun getSerie(id:Int): Resource<SerieWithGenres> {
         return serieSource.getSerie(id)
     }
-    suspend fun getSeasons(id:Int): Resource<Array<Season>> {
+    fun getSeasons(id:Int): Flowable<List<Season>> {
         return serieSource.getSeasons(id)
     }
-    suspend fun getEpisodes(id:Int): Resource<Array<Episode>> {
+    fun getEpisodes(id:Int): Flowable<List<Episode>> {
         return serieSource.getEpisodes(id)
     }
 
@@ -35,6 +32,10 @@ class SerieUseCase() {
 
     suspend fun otherEpisode(season_id:Int,number:Int): Resource<Episode>{
         return serieSource.otherEpisode(season_id,number)
+    }
+
+    fun getGenresWithSeries(): Flowable<List<GenreWithSeries>> {
+        return serieSource.getListGenreSeries()
     }
 
 }

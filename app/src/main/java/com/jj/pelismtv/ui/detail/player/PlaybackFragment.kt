@@ -175,18 +175,7 @@ class PlaybackFragment: VideoSupportFragment() {
 
 
     private fun validateUrl(url: String, chek: Boolean? = false) {
-        if (chek == true){
-            qualitys = ArrayList()
 
-                val urlTemp  = settings?.getString("movie_" + movieId + "_link", "")?:""
-                val cookieTemp  = settings?.getString("movie_" + movieId + "_cookie", null)
-                val qualityTemp  = settings?.getString("movie_" + movieId + "_quality", "")?:""
-                val referer  = settings?.getString("movie_" + movieId + "_referer", "")?:""
-                headers["Referer"] = referer
-                qualitys.add(Quality(qualityTemp, urlTemp, "MP4", cookieTemp))
-                chekUrl()
-
-        }else{
         when {
             url.contains("uqload") -> {
                 Log.e("uqload", "url$url")
@@ -269,12 +258,8 @@ class PlaybackFragment: VideoSupportFragment() {
 
                     xGetter.find(new_url)
                 }
-
-
             }
         }
-
-    }
     }
 
 
@@ -335,7 +320,7 @@ class PlaybackFragment: VideoSupportFragment() {
             val referer = viewModel.arrayPlayer[currentPlayer].link
             val editor = settings?.edit()
             editor?.putLong("movie_$movieId", t!!)
-            editor?.putString("movie_" + movieId + "_link", link)
+            editor?.putString("movie_" + movieId + "_link", referer)
             editor?.putString("movie_" + movieId + "_cookie", qualitys[currentQuality].cokies)
             editor?.putString("movie_" + movieId + "_quality", qualitys[currentQuality].quality)
             editor?.putString("movie_" + movieId + "_referer", referer)
@@ -359,7 +344,7 @@ class PlaybackFragment: VideoSupportFragment() {
                 val referer = viewModel.arrayPlayer[currentPlayer].link
                 val editor = settings?.edit()
                 editor?.putLong("movie_$movieId", t!!)
-                editor?.putString("movie_" + movieId + "_link", link)
+                editor?.putString("movie_" + movieId + "_link", referer)
                 editor?.putString("movie_" + movieId + "_cookie", qualitys[currentQuality].cokies)
                 editor?.putString("movie_" + movieId + "_quality", qualitys[currentQuality].quality)
                 editor?.putString("movie_" + movieId + "_referer", referer)

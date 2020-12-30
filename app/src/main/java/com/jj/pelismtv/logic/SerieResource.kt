@@ -6,6 +6,7 @@ import com.jj.pelismtv.AppDelegate
 import com.jj.pelismtv.model.*
 import com.jj.pelismtv.utils.RetrofitClient
 import com.jj.pelismtv.vo.Resource
+import io.reactivex.Flowable
 import org.json.JSONObject
 
 class SerieResource {
@@ -17,42 +18,10 @@ class SerieResource {
     private val episodedao = AppDelegate.database!!.episodeDao()
     private val playerseriedao = AppDelegate.database!!.playerSerieDao()
 
-    suspend fun getListSeries(sort:Int,search:String?,startYear:Long?,endYear:Long?,genres:Array<String>? = null): Resource<Array<Serie>> {
-        if((genres?.size ?: 0 ) > 0){
-            when (sort) {
-                1 -> {
-                    serieArrayList = seriedao.getSeriesRecent(search,startYear,endYear,genres)
-                }
-                2 -> {
-                    serieArrayList = seriedao.getSeriesOld(search,startYear,endYear,genres)
-                }
-                3 -> {
-                    serieArrayList = seriedao.getSeriesRecentYear(search,startYear,endYear,genres)
-                }
-                4 -> {
-                    serieArrayList = seriedao.getSeriesOldYear(search,startYear,endYear,genres)
-                }
-            }
-        }else{
-            when (sort) {
-                1 -> {
-                    serieArrayList = seriedao.getSeriesRecent(search,startYear,endYear)
-                }
-                2 -> {
-                    serieArrayList = seriedao.getSeriesOld(search,startYear,endYear)
-                }
-                3 -> {
-                    serieArrayList = seriedao.getSeriesRecentYear(search,startYear,endYear)
-                }
-                4 -> {
-                    serieArrayList = seriedao.getSeriesOldYear(search,startYear,endYear)
-                }
-            }
-        }
+    fun getListGenreSeries(): Flowable<List<GenreWithSeries>> {
 
-        return Resource.Success(serieArrayList)
+        return seriedao.getListGenreSeries()
     }
-
 
     suspend fun getGenres(): Resource<Array<GenreSerie>> {
         return Resource.Success(genredao.getGenres())
@@ -64,16 +33,16 @@ class SerieResource {
         return Resource.Success(serie)
     }
 
-    suspend fun getSeasons(id:Int): Resource<Array<Season>> {
+    fun getSeasons(id:Int): Flowable<List<Season>> {
         Log.e("llega","sdaaaaasdsd")
-        var serie = seasondao.getSeasons(id)
-        return Resource.Success(serie)
+        val serie = seasondao.getSeasons(id)
+        return serie
     }
 
-    suspend fun getEpisodes(id:Int): Resource<Array<Episode>> {
+    fun getEpisodes(id:Int):Flowable<List<Episode>> {
         Log.e("llega","sdaaaaasdsd")
-        var serie = episodedao.getEpisodes(id)
-        return Resource.Success(serie)
+        return episodedao.getEpisodes(id)
+
     }
 
     private var count = 1

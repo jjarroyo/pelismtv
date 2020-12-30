@@ -1,4 +1,21 @@
 <resources>
 
-    <style name="Theme.Pelismtv" parent="@style/Theme.Leanback" />
+    <style name="Theme.Pelismtv" parent="@style/Theme.Leanback">
+        <item name="android:colorPrimary">#00A2B8</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+
+    <style name="Theme.Pelismtv.LeanbackBrowse" parent="Theme.Leanback.Browse">
+        <item name="android:windowBackground">@color/card_examples_background</item>
+        <item name="defaultBrandColor">@color/fastlane_background</item>
+        <item name="defaultSearchColor">@color/search_color</item>
+        <item name="defaultSearchIconColor">@color/search_icon_color</item>
+        <item name="defaultSearchBrightColor">@color/search_bright_color</item>
+    </style>
+
+
+    <style name="Theme.Pelismtv.CustomTitle" parent="Theme.Leanback.VerticalGrid">
+        <item name="browseTitleViewLayout">@layout/title_view</item>
+        <item name="browseRowsMarginTop">120dp</item>
+    </style>
 </resources>

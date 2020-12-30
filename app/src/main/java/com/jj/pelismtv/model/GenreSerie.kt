@@ -47,3 +47,17 @@ data class SerieWithGenres(
     )
     val genres: List<GenreSerie>
 )
+
+data class GenreWithSeries(
+    @Embedded val genre: GenreSerie,
+    @Relation(
+        parentColumn = "id",
+        entity = Serie::class,
+        entityColumn = "id",
+        associateBy = Junction(
+            value = SerieGenre::class,parentColumn = "genre_serie_id",entityColumn = "serie_id"
+        )
+    )
+    val series: List<Serie>
+
+)

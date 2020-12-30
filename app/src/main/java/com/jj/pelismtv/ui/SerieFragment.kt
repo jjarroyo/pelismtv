@@ -5,19 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.core.app.ActivityOptionsCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.jj.pelismtv.R
-import com.jj.pelismtv.domain.MovieUseCase
-import com.jj.pelismtv.model.Genre
+import com.jj.pelismtv.domain.SerieUseCase
+import com.jj.pelismtv.model.GenreSerie
 import com.jj.pelismtv.model.Movie
-import com.jj.pelismtv.presenter.CardPresenter
+import com.jj.pelismtv.model.Serie
+import com.jj.pelismtv.presenter.SeriePresenter
+import com.jj.pelismtv.ui.detail.serie.GridSeasonActivity
 import com.jj.pelismtv.ui.detail.serie.MovieDetailsActivity
 import com.jj.pelismtv.ui.grid.GridGenreActivity
 import com.jj.pelismtv.ui.search.SearchActivity
@@ -25,125 +23,99 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
+class SerieFragment : BrowseSupportFragment(){
 
-/**
- * Loads a grid of cards with movies to browse.
- */
-class MainFragment : BrowseSupportFragment() {
-
-    private val mVideoCursorAdapter = CursorObjectAdapter(CardPresenter())
-    private var cols = 50
-    companion object {
-        private val TAG = "MainFragment"
-        private const val NUM_COLUMNS = 6
-    }
-    var customTitleView:View? = null
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: SerieViewModel
     //private var mAdapter: Adapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-      //  mVideoCursorAdapter.mapper = VideoCursorMapper()
-    //    adapter = mVideoCursorAdapter
+        //  mVideoCursorAdapter.mapper = VideoCursorMapper()
+        //    adapter = mVideoCursorAdapter
 
 
-        title = getString(R.string.vertical_grid_title)
-   //     isHeadersTransitionOnBackEnabled = true
-     //   brandColor = resources.getColor(R.color.fastlane_background)
+        title = getString(R.string.serie_grid_title)
         if (savedInstanceState == null) {
             prepareEntranceTransition()
         }
         setupFragment()
 
         Handler().postDelayed({
-            loadData()
+            loadDataSerie()
             startEntranceTransition()
         }, 2000)
 
-
     }
-
-    private class Adapter(presenter: CardPresenter?) : ArrayObjectAdapter(presenter) {
-        fun callNotifyChanged() {
-            super.notifyChanged()
-        }
-
-    }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         // Final initialization, modifying UI elements.
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProvider(this@MainFragment, MainViewModelFactory(MovieUseCase())).get(
-                MainViewModel::class.java
+        viewModel = ViewModelProvider(this@SerieFragment, SerieViewModelFactory(SerieUseCase())).get(
+            SerieViewModel::class.java
         )
 
         setupEventListeners()
         prepareEntranceTransition()
 
-
-
     }
-
 
     private fun setupEventListeners() {
         setOnSearchClickedListener {
             val intent = Intent(activity, SearchActivity::class.java)
             startActivity(intent)
         }
-       // onItemViewClickedListener = ItemViewClickedListener(this.requireContext())
+        // onItemViewClickedListener = ItemViewClickedListener(this.requireContext())
     }
 
     @SuppressLint("CheckResult")
-    private fun loadData() {
+    private fun loadDataSerie() {
 
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val cardPresenter = CardPresenter()
+        val cardPresenter = SeriePresenter()
 
-        viewModel.getGenreWithMovie()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+        viewModel.getGenreWithSerie()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe {
                 if (it != null) {
-                    var id = 100000001
+                    var id = 200000001
                     viewModel.arrayGenres.clear()
                     rowsAdapter.clear()
                     for (data in it) {
-                        Log.e(TAG, "mmmmmm " + data.movies.count())
                         val listRowAdapter = ArrayObjectAdapter(cardPresenter)
 
-                        val  sortMovie = data.movies.sortedByDescending { movie -> movie.id  }
-                        for ((cont, movie) in sortMovie.withIndex()) {
+                        val  sortSerie = data.series.sortedByDescending { serie -> serie.id  }
+                        for ((cont, serie) in sortSerie.withIndex()) {
                             if (cont <= 25) {
-                                listRowAdapter.add(movie)
+                                listRowAdapter.add(serie)
                             }
                             if (cont == 26) {
                                 listRowAdapter.add(
-                                        Movie(
-                                                id,
-                                                "Ver mas..",
-                                                "",
-                                                Date(),
-                                                "https://pelismayo.com/imgs/seeall.png",
-                                                null,
-                                                null,
-                                                ""
-                                        )
+                                    Serie(
+                                        id,
+                                        "Ver mas..",
+                                        "",
+                                        Date(),
+                                        "https://pelismayo.com/imgs/seeall.png",
+                                        null,
+                                        0,
+                                        ""
+                                    )
                                 )
                                 id++
                             }
                         }
-                        if (data.movies.size < 25) {
+                        if (data.series.size < 25) {
                             listRowAdapter.add(
-                                    Movie(
-                                            id,
-                                            "Ver mas..",
-                                            "",
-                                            Date(),
-                                            "https://pelismayo.com/imgs/seeall.png",
-                                            null,
-                                            null,
-                                            ""
-                                    )
+                                Serie(
+                                    id,
+                                    "Ver mas..",
+                                    "",
+                                    Date(),
+                                    "https://pelismayo.com/imgs/seeall.png",
+                                    null,
+                                    0,
+                                    ""
+                                )
                             )
                             id++
                         }
@@ -154,8 +126,6 @@ class MainFragment : BrowseSupportFragment() {
 
 
                     adapter = rowsAdapter
-                } else {
-                    Log.e(TAG, "mmmmmm ")
                 }
 
             }
@@ -185,14 +155,13 @@ class MainFragment : BrowseSupportFragment() {
 
         onItemViewClickedListener = OnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
 
-            if (item is Movie) {
+            if (item is Serie) {
 
-                val info:Movie = item
+                val info: Serie = item
 
                 when (info.id) {
                     100000001 -> {
                         if (viewModel.arrayGenres.size > 0) {
-                            Log.e("si ", viewModel.arrayGenres[0].label)
                             showGridGenre(viewModel.arrayGenres[0], itemViewHolder)
                         }
 
@@ -287,99 +256,15 @@ class MainFragment : BrowseSupportFragment() {
                             showGridGenre(viewModel.arrayGenres[15], itemViewHolder)
                         }
                     }
-                    100000017 -> {
-                        if (viewModel.arrayGenres.size > 16) {
-                            Log.e("si ", viewModel.arrayGenres[16].label)
-                            showGridGenre(viewModel.arrayGenres[16], itemViewHolder)
-                        }
-                    }
-                    100000018 -> {
-                        if (viewModel.arrayGenres.size > 17) {
-                            Log.e("si ", viewModel.arrayGenres[17].label)
-                            showGridGenre(viewModel.arrayGenres[17], itemViewHolder)
-                        }
-                    }
-                    100000019 -> {
-                        if (viewModel.arrayGenres.size > 18) {
-                            Log.e("si ", viewModel.arrayGenres[18].label)
-                            showGridGenre(viewModel.arrayGenres[18], itemViewHolder)
-                        }
-                    }
-                    100000020 -> {
-                        if (viewModel.arrayGenres.size > 19) {
-                            Log.e("si ", viewModel.arrayGenres[19].label)
-                            showGridGenre(viewModel.arrayGenres[19], itemViewHolder)
-                        }
-                    }
-                    100000021 -> {
-                        if (viewModel.arrayGenres.size > 20) {
-                            Log.e("si ", viewModel.arrayGenres[20].label)
-                            showGridGenre(viewModel.arrayGenres[20], itemViewHolder)
-                        }
-                    }
-                    100000022 -> {
-                        if (viewModel.arrayGenres.size > 21) {
-                            Log.e("si ", viewModel.arrayGenres[21].label)
-                            showGridGenre(viewModel.arrayGenres[21], itemViewHolder)
-                        }
-                    }
-                    100000023 -> {
-                        if (viewModel.arrayGenres.size > 22) {
-                            Log.e("si ", viewModel.arrayGenres[22].label)
-                            showGridGenre(viewModel.arrayGenres[22], itemViewHolder)
-                        }
-                    }
-                    100000024 -> {
-                        if (viewModel.arrayGenres.size > 23) {
-                            Log.e("si ", viewModel.arrayGenres[23].label)
-                            showGridGenre(viewModel.arrayGenres[23], itemViewHolder)
-                        }
-                    }
-                    100000025 -> {
-                        if (viewModel.arrayGenres.size > 24) {
-                            Log.e("si ", viewModel.arrayGenres[24].label)
-                            showGridGenre(viewModel.arrayGenres[24], itemViewHolder)
-                        }
-                    }
-                    100000026 -> {
-                        if (viewModel.arrayGenres.size > 25) {
-                            Log.e("si ", viewModel.arrayGenres[25].label)
-                            showGridGenre(viewModel.arrayGenres[25], itemViewHolder)
-                        }
-                    }
-                    100000027 -> {
-                        if (viewModel.arrayGenres.size > 26) {
-                            Log.e("si ", viewModel.arrayGenres[26].label)
-                            showGridGenre(viewModel.arrayGenres[26], itemViewHolder)
-                        }
-                    }
-                    100000028 -> {
-                        if (viewModel.arrayGenres.size > 27) {
-                            Log.e("si ", viewModel.arrayGenres[27].label)
-                            showGridGenre(viewModel.arrayGenres[27], itemViewHolder)
-                        }
-                    }
-                    100000029 -> {
-                        if (viewModel.arrayGenres.size > 28) {
-                            Log.e("si ", viewModel.arrayGenres[28].label)
-                            showGridGenre(viewModel.arrayGenres[28], itemViewHolder)
-                        }
-                    }
-                    100000030 -> {
-                        if (viewModel.arrayGenres.size > 29) {
-                            Log.e("si ", viewModel.arrayGenres[29].label)
-                            showGridGenre(viewModel.arrayGenres[29], itemViewHolder)
-                        }
-                    }
 
                     else -> {
 
-                        val intent = Intent(activity, MovieDetailsActivity::class.java)
-                        intent.putExtra("movie_id", item.id)
-
+                        val intent = Intent(activity, GridSeasonActivity::class.java)
+                        intent.putExtra("serie_id",  item.id)
+                        intent.putExtra("serie_title", item.title)
                         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                requireActivity(),
-                                (itemViewHolder.view as ImageCardView).mainImageView, "hero"
+                            requireActivity(),
+                            (itemViewHolder.view as ImageCardView).mainImageView, "hero"
                         ).toBundle()
                         requireActivity().startActivity(intent, bundle)
                     }
@@ -390,33 +275,16 @@ class MainFragment : BrowseSupportFragment() {
 
     }
 
-    fun showGridGenre(genre: Genre, itemViewHolder: Presenter.ViewHolder){
+    private fun showGridGenre(genre: GenreSerie, itemViewHolder: Presenter.ViewHolder){
         val intent = Intent(activity, GridGenreActivity::class.java)
         intent.putExtra("genre_id", genre.id)
         intent.putExtra("genre_title", genre.label)
         val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                (itemViewHolder.view as ImageCardView).mainImageView, "hero"
+            requireActivity(),
+            (itemViewHolder.view as ImageCardView).mainImageView, "hero"
         ).toBundle()
         requireActivity().startActivity(intent, bundle)
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        val browseFrameLayout = view?.findViewById<BrowseFrameLayout>(R.id.grid_frame)
-
-        browseFrameLayout?.setOnFocusSearchListener { focused, direction ->
-            val button1 = customTitleView!!.findViewById<Button>(R.id.serie_btn)
-            if ((focused !== customTitleView && direction == View.FOCUS_UP) ||
-                    ( (direction == View.FOCUS_LEFT || direction == View.FOCUS_RIGHT))) {
-                return@setOnFocusSearchListener button1
-            }
-
-            if ((button1.hasFocus() || button1.hasFocus()) && direction == View.FOCUS_DOWN) {
-                return@setOnFocusSearchListener browseFrameLayout
-            }
-            browseFrameLayout
-        }
-    }
 }
